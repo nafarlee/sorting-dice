@@ -4,13 +4,12 @@ from functools import reduce
 import pulp
 import yaml
 
-with open(r'./games.yaml') as game_file, open(r'./players.yaml') as player_file:
+with open(r'./games.yaml') as game_file, open(r'./votes.yaml') as vote_file:
     GAMES = yaml.full_load(game_file)
-    PLAYERS = yaml.full_load(player_file)
-
+    VOTES = yaml.full_load(vote_file)
 
 def main():
-    player_names = list(PLAYERS.keys())
+    player_names = list(VOTES.keys())
     table_permutations = pulp.allcombinations(player_names, len(player_names))
     possible_setups = reduce(reducer, table_permutations, [])
 
@@ -44,7 +43,7 @@ def reducer(l, table):
 def objective(t):
     game = t[0]
     players = t[1:]
-    return reduce(lambda s, p: s + PLAYERS[p].get(game, 0), players, 0)
+    return reduce(lambda s, p: s + VOTES[p].get(game, 0), players, 0)
 
 if __name__ == '__main__':
     print(main())
