@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 from functools import reduce
 
 import pulp
