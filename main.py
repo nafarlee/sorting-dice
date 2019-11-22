@@ -4,6 +4,7 @@ from functools import reduce
 import pulp
 import yaml
 
+
 with open(r'./games.yaml') as game_file, open(r'./votes.yaml') as vote_file:
     GAMES = yaml.full_load(game_file)
     VOTES = yaml.full_load(vote_file)
