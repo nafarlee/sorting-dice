@@ -14,14 +14,11 @@ def main():
     table_permutations = pulp.allcombinations(player_names, len(player_names))
     possible_setups = flatmap(mapper, table_permutations)
     possible_setups = list(filter(is_teachable, possible_setups))
-
-    included = pulp.LpVariable.dicts(
-        'Included setups',
-        possible_setups,
-        0,
-        1,
-        pulp.LpInteger,
-    )
+    included = pulp.LpVariable.dicts('Included setups',
+                                     possible_setups,
+                                     0,
+                                     1,
+                                     pulp.LpInteger)
     problem = pulp.LpProblem('Game Seating Problem', pulp.LpMaximize)
     problem += pulp.lpSum([objective(setup) * included[setup]
                            for setup in possible_setups])
