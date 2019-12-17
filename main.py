@@ -9,6 +9,7 @@ with open(r'./games.yaml') as game_file, open(r'./votes.yaml') as vote_file:
     GAMES = yaml.full_load(game_file)
     VOTES = yaml.full_load(vote_file)
 
+
 def main():
     player_names = list(VOTES.keys())
     table_permutations = pulp.allcombinations(player_names, len(player_names))
@@ -26,9 +27,7 @@ def main():
         problem += pulp.lpSum([included[setup]
                                for setup in possible_setups
                                if player in setup]) == 1, f"Must seat {player}"
-
     problem.solve()
-
     return [(objective(setup), *setup)
             for setup in possible_setups
             if included[setup].value() == 1]
@@ -46,11 +45,9 @@ def is_teachable(setup):
     new_players = [VOTES[p].get(game, {}).get('new?', False) for p in players]
     if not any(new_players):
         return True
-
     teachers = [VOTES[p].get(game, {}).get('teaches?', False) for p in players]
     if any(new_players) and any(teachers):
         return True
-
     return False
 
 
@@ -65,6 +62,7 @@ def objective(setup):
     return reduce(lambda s, p: s + VOTES[p].get(game, {}).get('score', 0),
                   players,
                   0)
+
 
 if __name__ == '__main__':
     print(main())
