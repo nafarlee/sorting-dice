@@ -28,9 +28,9 @@ def main():
                                for setup in possible_setups
                                if player in setup]) == 1, f"Must seat {player}"
     problem.solve()
-    return [(objective(setup), *setup)
-            for setup in possible_setups
-            if included[setup].value() == 1]
+    print([(objective(setup), *setup)
+           for setup in possible_setups
+           if included[setup].value() == 1])
 
 
 def flatmap(f, xs):
@@ -65,4 +65,4 @@ def objective(setup):
 
 
 if __name__ == '__main__':
-    print(main())
+    main()
