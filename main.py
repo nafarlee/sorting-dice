@@ -35,6 +35,20 @@ def main():
             for setup in possible_setups
             if included[setup].value() == 1]
 
+
+def is_teachable(setup):
+    (game, *players) = setup
+    new_players = [VOTES[p].get(game, {}).get('new?', False) for p in players]
+    if not any(new_players):
+        return True
+
+    teachers = [VOTES[p].get(game, {}).get('teaches?', False) for p in players]
+    if any(new_players) and any(teachers):
+        return True
+
+    return False
+
+
 def reducer(l, table):
     for game, counts in GAMES.items():
         if len(table) in counts:
