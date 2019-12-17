@@ -42,10 +42,10 @@ def flatmap(f, xs):
 
 def is_teachable(setup):
     (game, *players) = setup
-    new_players = [VOTES[p].get(game, {}).get('new?', False) for p in players]
+    new_players = [VOTES[p].get(game, {}).get('is_new', False) for p in players]
     if not any(new_players):
         return True
-    teachers = [VOTES[p].get(game, {}).get('teaches?', False) for p in players]
+    teachers = [VOTES[p].get(game, {}).get('is_teacher', False) for p in players]
     if any(new_players) and any(teachers):
         return True
     return False

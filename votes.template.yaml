@@ -2,8 +2,8 @@
 player-name:
   aeons end:
     score: 0
-    new?: false
-    teaches?: false
+    is_new: false
+    is_teacher: false
   arctic scavengers:
     score: 0
   aquicorn cove:
