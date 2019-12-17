@@ -1,13 +1,29 @@
 #!/usr/bin/env python
 from functools import reduce
+from typing import Tuple
+from typing import List
+from typing import Dict
+from typing import Optional
+from typing import TypeVar
+from typing import Callable
 
+from mypy_extensions import TypedDict
 import pulp
 import yaml
 
 
+class Vote(TypedDict):
+    is_new: Optional[bool]
+    is_teacher: Optional[bool]
+    score: int
+
+
+Games = Dict[str, Vote]
+
+
 with open(r'./games.yaml') as game_file, open(r'./votes.yaml') as vote_file:
-    GAMES = yaml.full_load(game_file)
-    VOTES = yaml.full_load(vote_file)
+    GAMES: Dict[str, List[int]] = yaml.full_load(game_file)
+    VOTES: Dict[str, Games] = yaml.full_load(vote_file)
 
 
 def main():
@@ -33,14 +49,16 @@ def main():
            if included[setup].value() == 1])
 
 
-def flatmap(f, xs):
-    l = []
+T = TypeVar('T')
+U = TypeVar('U')
+def flatmap(f: Callable[[T], List[U]], xs: List[T]) -> List[U]:
+    l: List[U] = []
     for x in xs:
         l += f(x)
     return l
 
 
-def is_teachable(setup):
+def is_teachable(setup: Tuple[str, ...]) -> bool:
     (game, *players) = setup
     new_players = [VOTES[p].get(game, {}).get('is_new', False) for p in players]
     if not any(new_players):
@@ -51,13 +69,13 @@ def is_teachable(setup):
     return False
 
 
-def mapper(table):
+def mapper(table: Tuple[str, ...]) -> List[Tuple[str, ...]]:
     return [(game, *table)
             for game, counts in GAMES.items()
             if len(table) in counts]
 
 
-def objective(setup):
+def objective(setup: Tuple[str, ...]) -> int:
     (game, *players) = setup
     return reduce(lambda s, p: s + VOTES[p].get(game, {}).get('score', 0),
                   players,
