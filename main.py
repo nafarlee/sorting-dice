@@ -13,6 +13,7 @@ def main():
     player_names = list(VOTES.keys())
     table_permutations = pulp.allcombinations(player_names, len(player_names))
     possible_setups = reduce(reducer, table_permutations, [])
+    possible_setups = list(filter(is_teachable, possible_setups))
 
     included = pulp.LpVariable.dicts(
         'Included setups',
