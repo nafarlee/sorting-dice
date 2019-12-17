@@ -12,7 +12,7 @@ with open(r'./games.yaml') as game_file, open(r'./votes.yaml') as vote_file:
 def main():
     player_names = list(VOTES.keys())
     table_permutations = pulp.allcombinations(player_names, len(player_names))
-    possible_setups = reduce(reducer, table_permutations, [])
+    possible_setups = flatmap(mapper, table_permutations)
     possible_setups = list(filter(is_teachable, possible_setups))
 
     included = pulp.LpVariable.dicts(
@@ -57,11 +57,11 @@ def is_teachable(setup):
     return False
 
 
-def reducer(l, table):
-    for game, counts in GAMES.items():
-        if len(table) in counts:
-            l.append((game, *table))
-    return l
+def mapper(table):
+    return [(game, *table)
+            for game, counts in GAMES.items()
+            if len(table) in counts]
+
 
 def objective(setup):
     (game, *players) = setup
