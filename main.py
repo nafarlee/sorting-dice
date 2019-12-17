@@ -37,6 +37,13 @@ def main():
             if included[setup].value() == 1]
 
 
+def flatmap(f, xs):
+    l = []
+    for x in xs:
+        l += f(x)
+    return l
+
+
 def is_teachable(setup):
     (game, *players) = setup
     new_players = [VOTES[p].get(game, {}).get('new?', False) for p in players]
