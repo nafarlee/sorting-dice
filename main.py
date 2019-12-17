@@ -41,10 +41,11 @@ def reducer(l, table):
             l.append((game, *table))
     return l
 
-def objective(t):
-    game = t[0]
-    players = t[1:]
-    return reduce(lambda s, p: s + VOTES[p].get(game, 0), players, 0)
+def objective(setup):
+    (game, *players) = setup
+    return reduce(lambda s, p: s + VOTES[p].get(game, {}).get('score', 0),
+                  players,
+                  0)
 
 if __name__ == '__main__':
     print(main())
