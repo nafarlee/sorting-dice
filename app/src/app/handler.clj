@@ -1,5 +1,5 @@
 (ns app.handler
-  (:require [compojure.core :refer :all]
+  (:require [compojure.core :refer [defroutes GET]]
             [compojure.route :as route]
             [ring.middleware.defaults :refer [wrap-defaults site-defaults]]))
 
